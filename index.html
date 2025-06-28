@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dinosaur Fact Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2dfdb 100%);
+            margin: 0;
+            padding: 0;
+            color: #263238;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem 1rem 1rem;
+            background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        #fact-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.15);
+            padding: 2rem 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        #dino-image-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #dino-image {
+            width: 220px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(44, 62, 80, 0.18);
+            transition: transform 0.6s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+
+        #fact-container {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            min-height: 60px;
+            transition: color 0.3s;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.7s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        button {
+            background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.10);
+            transition: background 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+            transform: translateY(-2px) scale(1.04);
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+
+        #additional-facts-section {
+            background: rgba(255,255,255,0.92);
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
+            padding: 1.5rem 2rem;
+            width: 90%;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        #additional-facts-section h2 {
+            margin-top: 0;
+            color: #185a9d;
+        }
+
+        #additional-facts-list {
+            list-style: disc inside;
+            color: #263238;
+            font-size: 1.05rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #b2dfdb;
+            color: #185a9d;
+            font-size: 0.95rem;
+            border-top: 1px solid #43cea2;
+        }
+
+        a {
+            color: #185a9d;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 700px) {
+            #fact-section, #additional-facts-section {
+                padding: 1rem;
+            }
+            #dino-image {
+                width: 100%;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🦖 Dinosaur Fact Generator 🦕</h1>
+        <p>Discover amazing facts about dinosaurs!</p>
+    </header>
+    <main>
+        <section id="fact-section">
+            <div id="dino-image-container">
+                <img id="dino-image" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Realistic Dinosaur">
+            </div>
+            <div id="fact-container" class="fade-in">
+                <span id="fact-text"></span>
+            </div>
+            <div class="buttons">
+                <button id="generate-btn">Generate Random Dinosaur Fact</button>
+                <button id="share-btn">
+                    <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" class="icon">
+                    Share on LinkedIn
+                </button>
+            </div>
+        </section>
+        <section id="additional-facts-section">
+            <h2>Additional Facts</h2>
+            <ul id="additional-facts-list"></ul>
+        </section>
+    </main>
+    <footer>
+        <p>Images from <a href="https://unsplash.com/s/photos/dinosaur" target="_blank">Unsplash</a> | &copy; 2024 Dinosaur Facts</p>
+    </footer>
+    <script>
+        // Dinosaur facts (main)
+        const facts = [
+            "The word 'dinosaur' means 'terrible lizard', but dinosaurs are not actually lizards.",
+            "Dinosaurs lived on Earth for about 165 million years.",
+            "The largest known dinosaur is Argentinosaurus, which could reach lengths of over 100 feet.",
+            "Some dinosaurs, like Velociraptor, were covered in feathers.",
+            "The smallest dinosaur ever discovered is the bee hummingbird-sized Microraptor.",
+            "Tyrannosaurus rex had a bite force of over 12,000 pounds.",
+            "Some dinosaurs, like Stegosaurus, had brains the size of a walnut.",
+            "The first dinosaur fossils were scientifically described in the early 19th century.",
+            "Not all dinosaurs went extinct; birds are considered modern-day dinosaurs.",
+            "Triceratops had three horns and a large frill to protect itself from predators.",
+            "Some dinosaurs, like Parasaurolophus, had crests on their heads that may have been used for communication.",
+            "The mass extinction that wiped out the dinosaurs occurred about 66 million years ago.",
+            "Fossilized dinosaur eggs have been found on every continent, including Antarctica.",
+            "Some dinosaurs, like Ankylosaurus, had armored plates and clubbed tails for defense.",
+            "Paleontologists continue to discover new dinosaur species every year."
+        ];
+
+        // Additional facts
+        const additionalFacts = [
+            "The Spinosaurus is believed to be the largest carnivorous dinosaur, even bigger than T. rex.",
+            "Some dinosaurs, like the Maiasaura, are known for their nurturing parenting behaviors.",
+            "The Brachiosaurus had longer front legs than back legs, giving it a unique posture.",
+            "Fossilized dinosaur skin impressions show that some species had scales, while others had feathers.",
+            "The Oviraptor's name means 'egg thief', but evidence suggests it may have been protecting its own eggs.",
+            "The Giganotosaurus was one of the largest meat-eating dinosaurs, rivaling T. rex in size.",
+            "Some sauropods may have used their long tails as whips for defense or communication.",
+            "The Troodon had one of the largest brains relative to its body size among dinosaurs.",
+            "Dinosaur fossils have been found on every continent, including Antarctica.",
+            "The Stegoceras had a thick, domed skull, possibly used for head-butting contests."
+        ];
+
+        // Realistic dinosaur image URLs (royalty-free, Unsplash/Pexels)
+        const dinoImages = [
+            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+            "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&w=600&q=80",
+            "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80",
+            "https://images.pexels.com/photos/2792152/pexels-photo-2792152.jpeg?auto=compress&w=600&q=80",
+            "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=600&q=80"
+        ];
+
+        const factText = document.getElementById('fact-text');
+        const dinoImage = document.getElementById('dino-image');
+        const generateBtn = document.getElementById('generate-btn');
+        const shareBtn = document.getElementById('share-btn');
+        const additionalFactsList = document.getElementById('additional-facts-list');
+
+        // Helper to get a random item from an array
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // Animate fact and image
+        function showRandomFact() {
+            // Randomly choose from both main and additional facts
+            const allFacts = facts.concat(additionalFacts);
+            const randomFact = getRandomItem(allFacts);
+            const randomImage = getRandomItem(dinoImages);
+
+            // Animate fade-out
+            factText.classList.remove('fade-in');
+            dinoImage.style.transform = 'scale(0.95) rotate(-2deg)';
+            setTimeout(() => {
+                // Update content
+                factText.textContent = randomFact;
+                dinoImage.src = randomImage;
+                // Animate fade-in
+                factText.classList.add('fade-in');
+                dinoImage.style.transform = 'scale(1.05) rotate(2deg)';
+                setTimeout(() => {
+                    dinoImage.style.transform = 'scale(1) rotate(0deg)';
+                }, 400);
+            }, 200);
+        }
+
+        // Populate additional facts section
+        function populateAdditionalFacts() {
+            additionalFactsList.innerHTML = '';
+            additionalFacts.forEach(fact => {
+                const li = document.createElement('li');
+                li.textContent = fact;
+                additionalFactsList.appendChild(li);
+            });
+        }
+
+        // LinkedIn share functionality
+        function shareOnLinkedIn() {
+            const fact = factText.textContent;
+            const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&summary=${encodeURIComponent(fact)}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        // Initial load
+        window.onload = () => {
+            showRandomFact();
+            populateAdditionalFacts();
+        };
+
+        // Event listeners
+        generateBtn.addEventListener('click', showRandomFact);
+        shareBtn.addEventListener('click', shareOnLinkedIn);
+    </script>
+</body>
+</html>
